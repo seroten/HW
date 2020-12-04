@@ -18,11 +18,18 @@ public class MyDeque<T>  {
         list = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public void insert(T item) {
+    public void insertEnd(T item) {
         if(isFull()) throw new IllegalStateException();
         size++;
         list[end] = item;
         end = nextIndex(end);
+    }
+
+    public void insertFront(T item) {
+        if(isFull()) throw new IllegalStateException();
+        begin = previuosIndex(begin);
+        list[begin] = item;
+        size++;
     }
 
     public T removeFront() {
