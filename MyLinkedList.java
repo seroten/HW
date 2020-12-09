@@ -250,23 +250,25 @@ public class MyLinkedList<T> implements Iterable<T>{
         }
 
         @Override
-        public void set(T t) {
+        public void set(T item) {
             if(previousIterationWasNext) {
-                previousNode.setValue(t);
+                previousNode.setValue(item);
             } else {
-                nextNode.setValue(t);
+                nextNode.setValue(item);
             }
         }
 
         @Override
-        public void add(T t) {
-            Node newNode = new Node(t);
-            newNode.setNext(nextNode);
-            newNode.setPrev(previousNode);
-            if(hasNext()) {
+        public void add(T item) {
+            Node newNode = new Node(item);
+            if(!hasNext()) {
+                insertLast(item);
+            } else if(!hasPrevious()) {
+                insertFirst(item);
+            } else {
+                newNode.setNext(nextNode);
+                newNode.setPrev(previousNode);
                 nextNode.setPrev(newNode);
-            }
-            if(hasPrevious()) {
                 previousNode.setNext(newNode);
             }
 
