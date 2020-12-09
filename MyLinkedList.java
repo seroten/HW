@@ -260,12 +260,12 @@ public class MyLinkedList<T> implements Iterable<T>{
 
         @Override
         public void add(T item) {
-            Node newNode = new Node(item);
             if(!hasNext()) {
                 insertLast(item);
             } else if(!hasPrevious()) {
                 insertFirst(item);
             } else {
+                Node newNode = new Node(item);
                 newNode.setNext(nextNode);
                 newNode.setPrev(previousNode);
                 nextNode.setPrev(newNode);
