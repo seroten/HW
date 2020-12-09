@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements Iterable<T>{
@@ -165,6 +166,110 @@ public class MyLinkedList<T> implements Iterable<T>{
         public T next() {
             current= current.getNext();
             return current.getValue();
+        }
+    }
+
+    public ListIterator<T> listIterator() {
+        return new ListIter();
+    }
+
+    public class ListIter implements ListIterator<T> {
+        Node nextNode = first;
+        Node previousNode = null;
+        int index = -1;
+        boolean previousIterationWasNext;
+
+        @Override
+        public boolean hasNext() {
+            return nextNode != null;
+        }
+
+        @Override
+        public T next() {
+            T temp = nextNode.getValue();
+            previousNode = nextNode;
+            nextNode = nextNode.getNext();
+            index++;
+            previousIterationWasNext = true;
+            return temp;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return previousNode != null;
+        }
+
+        @Override
+        public T previous() {
+            T temp =previousNode.getValue();
+            nextNode = previousNode;
+            previousNode = previousNode.getPrev();
+            index--;
+            previousIterationWasNext = false;
+            return temp;
+        }
+
+        @Override
+        public int nextIndex() {
+            return index + 1;
+        }
+
+        @Override
+        public int previousIndex() {
+            return index;
+        }
+
+        @Override
+        public void remove() {
+            //удаляем previousNode
+            if(previousIterationWasNext) {
+                if(!hasNext()) {
+                    removeLast();
+                    nextNode = null;
+                    previousNode = last;
+                    return;
+                }
+                nextNode.setPrev(previousNode.getPrev());
+                if(previousNode.getPrev() != null) {
+                    previousNode.getPrev().setNext(nextNode);
+                }
+                previousNode = nextNode.getPrev();
+            } else { //удаляем nextNode
+                if(!hasPrevious()) {
+                    removeFirst();
+                    previousNode = null;
+                    nextNode = first;
+                    return;
+                }
+                previousNode.setNext(nextNode.getNext());
+                if(nextNode != null) {
+                    nextNode.getNext().setPrev(previousNode);
+                }
+                nextNode = previousNode.getNext();
+            }
+        }
+
+        @Override
+        public void set(T t) {
+            if(previousIterationWasNext) {
+                previousNode.setValue(t);
+            } else {
+                nextNode.setValue(t);
+            }
+        }
+
+        @Override
+        public void add(T t) {
+            Node newNode = new Node(t);
+            newNode.setNext(nextNode);
+            newNode.setPrev(previousNode);
+            if(hasNext()) {
+                nextNode.setPrev(newNode);
+            }
+            if(hasPrevious()) {
+                previousNode.setNext(newNode);
+            }
+
         }
     }
 
