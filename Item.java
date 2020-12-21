@@ -7,4 +7,3 @@ public class Item {
         this.weight = weight;
     }
 }
-
